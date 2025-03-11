@@ -33,26 +33,13 @@ for _ in range(T):
                         break
 
     # valid에 0인 숫자가 힙에 남아있다면 제거
-    while max_heap:
-        d = -1*max_heap[0]
-        if valid[d] == 0:
-            heapq.heappop(max_heap)
-        else:
-            break
-    while min_heap:
-        d = min_heap[0]
-        if valid[d] == 0:
-            heapq.heappop(min_heap)
-        else:
-            break
+    while max_heap and valid[-1*max_heap[0]] == 0:
+        heapq.heappop(max_heap)
+    while min_heap and valid[min_heap[0]] == 0:
+        heapq.heappop(min_heap)
 
-    empty_flag = True
-    for k, v in valid.items():
-        if v != 0:
-            empty_flag = False
-            break
-    if empty_flag:
-        print('EMPTY')
-    else:
+    if min_heap and max_heap:
         print(-1*max_heap[0], min_heap[0])
+    else:
+        print('EMPTY')
         
