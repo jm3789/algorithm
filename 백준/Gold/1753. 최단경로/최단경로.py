@@ -18,13 +18,14 @@ for _ in range(E):
     edges[u].append((v, w))
 
 pq = []  # 우선순위 큐, [거리, 노드번호] 저장. 가장 작은 거리의 노드 번호를 반환하도록
-for i in range(1, V+1):
-    heapq.heappush(pq, [d[i], i])  # 거리, 노드번호를 우선순위 큐에 넣음
-
-start = K
+heapq.heappush(pq, [0, K])  # 거리, 노드번호를 우선순위 큐에 넣음
 
 while pq:
+    start = heapq.heappop(pq)[1]  # 출발점으로부터 가장 작은 거리, 노드번호를 pop
+    if visited[start]:  # 이미 방문한 노드면 스킵
+        continue
     visited[start] = True  # start 노드 방문 처리
+
     for edge in edges[start]:  # start 노드와 연결된 간선에 대한 정보
         end = edge[0]
         weight = edge[1]
@@ -33,11 +34,6 @@ while pq:
             d[end] = d[start] + weight
         # 갱신된 거리와 노드번호를 우선순위 큐에 넣음
         heapq.heappush(pq, [d[end], end])
-    # 우선 순위 큐에서 가장 작은 거리의 노드 번호를 pop: 이미 방문한 노드면 스킵
-    while pq:
-        start = heapq.heappop(pq)[1]  # 거리, 노드번호를 pop
-        if not visited[start]:  # 방문하지 않은 노드면 break
-            break
 
 # 결과 출력
 for i in range(1, len(d)):
