@@ -16,36 +16,37 @@ for _ in range(M):
 
 S, E = map(int, input().split())
 
-d = [[float('inf'), []] for _ in range(N+1)]  # [최단거리, [방문한 노드번호들]]
-d[0][0] = 0
-d[S][0] = 0
+# TODO: deepcopy는 쓰지 않아도 된다! 이전 노드를 딱 하나만 기억해도 전체 경로를 역추적할 수 있기 때문. prev로 이전노드 저장하자
+d = [float('inf') for _ in range(N+1)]  # 최단거리 리스트
+d[0] = 0
+d[S] = 0
+path = [[] for _ in range(N+1)]  # 방문한 노드 번호들 2차원 리스트
 
 pq = []
-pq.append((S, 0))  # (출발 노드번호, 현재 최단거리)
+pq.append((0, S))  # (현재 최단거리, 출발 노드번호)
 
 while pq:
     # 노드 pop
-    start, dist = heapq.heappop(pq)  # dist는 이 노드가 pq로 들어가던 시점에서의 최단거리
+    dist, start = heapq.heappop(pq)  # dist는 이 노드가 pq로 들어가던 시점에서의 최단거리
     # 이미 다른 더 작은 값으로 갱신되었다면 패스
-    if d[start][0] < dist:
+    if d[start] < dist:
         continue
 
     # 해당 노드 확인
     for end, weight in edges[start]:
 
         # 최단거리 갱신하면서 pq에 넣기
-        if d[start][0] + weight < d[end][0]:
-            d[end][0] = d[start][0] + weight
-            d[end][1] = copy.deepcopy(d[start][1])
-            d[end][1].append(start)
-            heapq.heappush(pq, (end, d[end][0]))
+        if d[start] + weight < d[end]:
+            d[end] = d[start] + weight
+            path[end] = copy.deepcopy(path[start])
+            path[end].append(start)
+            heapq.heappush(pq, (d[end], end))
 
 # 방문한 노드번호들 리스트에 마지막 노드번호 추가
-d[E][1].append(E)
+path[E].append(E)
 
 # 출력
-print(d[E][0])
-print(len(d[E][1]))
-for num in d[E][1]:
-    print(num, end=' ')
-print()
+print(d[E])
+print(len(path[E]))
+print(' '.join(map(str, path[E])))
+
