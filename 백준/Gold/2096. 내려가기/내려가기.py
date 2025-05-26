@@ -5,6 +5,9 @@
 # 6 3 1
 # 0 4 9
 
+import sys
+input = sys.stdin.readline
+
 N = int(input())
 dp1_a = dp1_b = dp1_c = 0
 dp2_a = dp2_b = dp2_c = 0
